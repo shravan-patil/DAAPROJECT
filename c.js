@@ -7,6 +7,7 @@ function addToCart(item) {
     } else {
         cart.push({...item, quantity: 1});
     }
+    alert(`${item.part} added to your cart`);
     updateCart();
 }
 

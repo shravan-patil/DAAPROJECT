@@ -9,9 +9,9 @@
 <body>
 <header>
     <div class="header-content">
-        <div class="logo">⚙️ Classic Motors</div>
+        <div class="logo">Classic Motors</div>
         <div class="cart-icon" onclick="toggleCart()">
-            🛒 Cart <span class="cart-count" id="cartCount">0</span>
+         Cart <span class="cart-count" id="cartCount">0</span>
         </div>
     </div>
 </header>
@@ -22,13 +22,16 @@
 </div>
 
 <!-- Navigation Buttons -->
-<button class="filter-btn active" onclick="showAll()">All Parts</button>
-<button class="filter-btn" id="engineBtn" onclick="showMasterCategory('Engine Parts')">Engine</button>
-<button class="filter-btn" id="exteriorBtn" onclick="showMasterCategory('Exterior Parts')">Exterior</button>
-<button class="filter-btn" id="interiorBtn" onclick="showMasterCategory('Interior Parts')">Interior</button>
-<button class="filter-btn" id="electricalBtn" onclick="showMasterCategory('Electrical Parts')">Electrical</button>
+<div class="filters">
+    <button class="filter-btn active" onclick="showAll()">All Parts</button>
+    <button class="filter-btn" id="engineBtn" onclick="showMasterCategory('Engine')">Engine</button>
+    <button class="filter-btn" id="exteriorBtn" onclick="showMasterCategory('Exterior Parts')">Exterior</button>
+    <button class="filter-btn" id="interiorBtn" onclick="showMasterCategory('Interior Parts')">Interior</button>
+    <button class="filter-btn" id="electricalBtn" onclick="showMasterCategory('Electrical Parts')">Electrical</button>
+    <a href="SellMain.html"><button id="sellbtn" class="filter-btn"> Sell Your Product</button></a>
+</div>
 
-<div class="products" id="container"></div>
+<div id="productsGrid"></div>
 
 <div class="cart-modal" id="cartModal">
     <div class="cart-content">
@@ -40,9 +43,7 @@
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script src="p.js"></script>
 <script src="c.js"></script>
 

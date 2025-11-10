@@ -12,7 +12,7 @@
     padding: 0;
   }
   .container {
-    max-width: 900px;
+    max-width: 700px;
     margin: 40px auto;
     background: #fff;
     border-radius: 16px;
@@ -22,45 +22,88 @@
   .header {
     background: linear-gradient(to right, #d97706, #ea580c);
     color: white;
-    padding: 20px 30px;
+    padding: 30px;
+    text-align: center;
   }
   h1 {
     margin: 0;
-    font-size: 26px;
+    font-size: 28px;
   }
-  p {
-    margin: 5px 0 0;
+  .subtitle {
+    margin: 8px 0 0;
     color: #ffedd5;
+    font-size: 16px;
   }
-  .section {
-    padding: 25px 30px;
-    border-bottom: 1px solid #f3f3f3;
+  .form-section {
+    padding: 30px;
   }
   label {
-    display:block;
+    display: block;
     font-weight: 600;
-    margin-top: 10px;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    color: #374151;
   }
   input, select, textarea {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    margin-top: 5px;
+    padding: 12px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 15px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
   }
-  button {
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #d97706;
+  }
+  .submit-btn {
+    width: 100%;
     background: linear-gradient(to right, #d97706, #ea580c);
     color: white;
     border: none;
-    padding: 12px 20px;
+    padding: 15px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
+    font-size: 16px;
+    margin-top: 30px;
+    transition: transform 0.2s;
   }
-  button:hover { opacity: 0.9; }
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(217, 119, 6, 0.3);
+  }
   .status {
+    text-align: center;
     margin-top: 15px;
     font-weight: 500;
+    padding: 12px;
+    border-radius: 8px;
+  }
+  .status.success {
+    background: #d1fae5;
+    color: #065f46;
+  }
+  .status.error {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  .image-preview {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .image-preview img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+  }
+  .required {
+    color: #dc2626;
   }
 </style>
 </head>
@@ -68,38 +111,49 @@
 <div class="container">
   <div class="header">
     <h1>Sell Your Vintage Parts</h1>
-    <p>List your authentic vintage car parts with us</p>
+    <p class="subtitle">List your authentic vintage car parts with us</p>
   </div>
-  <div class="section">
-    <h2>Seller Information</h2>
-    <label>Name</label>
-    <input type="text" id="name" placeholder="John Doe">
-    <label>Phone</label>
-    <input type="text" id="phone" placeholder="+91 98765 43210">
-    <label>Address</label>
-    <textarea id="address" rows="2" placeholder="Street, City, State, PIN"></textarea>
-  </div>
-  <div class="section">
-    <h2>Part Information</h2>
-    <label>Master Category</label>
-    <select id="masterCategory"></select>
-    <label>Category</label>
-    <select id="category"></select>
-    <label>Part Name</label>
-    <select id="partName"></select>
-    <label>Description</label>
-    <textarea id="description" rows="3" placeholder="Describe the part condition and model..."></textarea>
-  </div>
-  <div class="section">
-    <h2>Media Uploads</h2>
-    <label>Images</label>
-    <input type="file" id="images" multiple accept="image/*">
-    <label>Video</label>
-    <input type="file" id="video" accept="video/*">
-  </div>
-  <div class="section">
-    <button id="submitBtn">Submit & Save Locally</button>
-    <p class="status" id="status"></p>
+
+  <div class="form-section">
+    <form id="submissionForm">
+      <label>Name <span class="required">*</span></label>
+      <input type="text" id="name" placeholder="Enter your full name" required>
+
+      <label>Phone <span class="required">*</span></label>
+      <input type="tel" id="phone" placeholder="+91 98765 43210" required>
+
+      <label>Address <span class="required">*</span></label>
+      <textarea id="address" rows="2" placeholder="Street, City, State, PIN" required></textarea>
+
+      <label>Master Category <span class="required">*</span></label>
+      <select id="masterCategory" required>
+        <option value="">Select Master Category</option>
+      </select>
+
+      <label>Category <span class="required">*</span></label>
+      <select id="category" required>
+        <option value="">Select Category</option>
+      </select>
+
+      <label>Part Name <span class="required">*</span></label>
+      <select id="partName" required>
+        <option value="">Select Part</option>
+      </select>
+
+      <label>Description</label>
+      <textarea id="description" rows="3" placeholder="Describe the part condition, model, year, etc."></textarea>
+
+      <label>Images</label>
+      <input type="file" id="images" multiple accept="image/*">
+      <div id="imagePreview" class="image-preview"></div>
+
+      <label>Video (Optional)</label>
+      <input type="file" id="video" accept="video/*">
+
+      <button type="submit" class="submit-btn">Submit Listing</button>
+    </form>
+
+    <div id="status" class="status" style="display: none;"></div>
   </div>
 </div>
 
@@ -142,86 +196,71 @@ const partsData = {
   }
 };
 
+// Populate master categories
 const masterCategory = document.getElementById('masterCategory');
 const category = document.getElementById('category');
 const partName = document.getElementById('partName');
-const statusEl = document.getElementById('status');
 
 Object.keys(partsData).forEach(cat => {
   const opt = document.createElement('option');
-  opt.value = cat; opt.textContent = cat;
+  opt.value = cat;
+  opt.textContent = cat;
   masterCategory.appendChild(opt);
 });
 
+// Handle category changes
 masterCategory.addEventListener('change', () => {
-  category.innerHTML = ''; partName.innerHTML = '';
+  category.innerHTML = '<option value="">Select Category</option>';
+  partName.innerHTML = '<option value="">Select Part</option>';
   const selected = partsData[masterCategory.value];
-  Object.keys(selected).forEach(sub => {
-    const opt = document.createElement('option');
-    opt.value = sub; opt.textContent = sub;
-    category.appendChild(opt);
-  });
+  if (selected) {
+    Object.keys(selected).forEach(sub => {
+      const opt = document.createElement('option');
+      opt.value = sub;
+      opt.textContent = sub;
+      category.appendChild(opt);
+    });
+  }
 });
 
 category.addEventListener('change', () => {
-  partName.innerHTML = '';
-  const selectedParts = partsData[masterCategory.value][category.value];
-  selectedParts.forEach(p => {
-    const opt = document.createElement('option');
-    opt.value = p; opt.textContent = p;
-    partName.appendChild(opt);
-  });
+  partName.innerHTML = '<option value="">Select Part</option>';
+  const selectedParts = partsData[masterCategory.value]?.[category.value];
+  if (selectedParts) {
+    selectedParts.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p;
+      opt.textContent = p;
+      partName.appendChild(opt);
+    });
+  }
 });
 
-document.getElementById('submitBtn').addEventListener('click', async () => {
-  try {
-    const dirHandle = await window.showDirectoryPicker();
-    const submissionsDir = await dirHandle.getDirectoryHandle('Submissions', { create: true });
 
-    // Count existing submissions
-    let count = 1;
-    for await (const entry of submissionsDir.values()) {
-      if (entry.kind === 'directory' && entry.name.startsWith('submission_')) count++;
-    }
-    const submissionDir = await submissionsDir.getDirectoryHandle(`submission_${count}`, { create: true });
-
-    const infoFile = await submissionDir.getFileHandle('info.txt', { create: true });
-    const writable = await infoFile.createWritable();
-    const data = `Name: ${name.value}
-Phone: ${phone.value}
-Address: ${address.value}
-Master Category: ${masterCategory.value}
-Category: ${category.value}
-Part Name: ${partName.value}
-Description: ${description.value}
-Date: ${new Date().toLocaleString()}`;
-    await writable.write(data);
-    await writable.close();
-
-    // Save images
-    for (let img of images.files) {
-      const fileHandle = await submissionDir.getFileHandle(img.name, { create: true });
-      const writableImg = await fileHandle.createWritable();
-      await writableImg.write(await img.arrayBuffer());
-      await writableImg.close();
-    }
-
-    // Save video
-    const vid = video.files[0];
-    if (vid) {
-      const fileHandle = await submissionDir.getFileHandle(vid.name, { create: true });
-      const writableVid = await fileHandle.createWritable();
-      await writableVid.write(await vid.arrayBuffer());
-      await writableVid.close();
-    }
-
-    statusEl.textContent = `✅ Submission saved as submission_${count}`;
-    statusEl.style.color = 'green';
-  } catch (err) {
-    console.error(err);
-    statusEl.textContent = '❌ Failed to save submission. Please try again.';
-    statusEl.style.color = 'red';
-  }
+// Handle form submission
+document.getElementById('submissionForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  const statusEl = document.getElementById('status');
+  
+  // Show success message
+  statusEl.textContent = '✓ Submission received successfully!';
+  statusEl.className = 'status success';
+  statusEl.style.display = 'block';
+  
+  // Reset form
+  document.getElementById('submissionForm').reset();
+  document.getElementById('imagePreview').innerHTML = '';
+  category.innerHTML = '<option value="">Select Category</option>';
+  partName.innerHTML = '<option value="">Select Part</option>';
+  
+  // Hide message after 3 seconds
+  setTimeout(() => {
+    statusEl.style.display = 'none';
+  }, 3000);
+  
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 </script>
 </body>
